@@ -22,21 +22,118 @@ public class Agent {
             return new Pair(null, Integer.MIN_VALUE);
 
         // check depth here
-
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+//        System.out.println(possibleMoves.size());
+        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+
 
         // write your codes here
-
+        Move bestMove = null;
+        int valueMax = Integer.MIN_VALUE;
+        for (Move move : possibleMoves) {
+            Tile[][] clone = this.board.cloneBoard(currentBoard);
+            clone = this.board.doMove(move, clone);
+            currentColor = (byte)(3 - currentColor);
+            Pair p = min(clone, currentColor, (byte)(depth + 1));
+            if(p.value > valueMax){
+                valueMax = p.value;
+                bestMove = move;
+            }
+        }
         // return pair(move, value)
-        return new Pair(null, 0);
+//        System.out.println(valueMax);
+        return new Pair(bestMove, valueMax);
     }
 
     private Pair min(Tile[][] currentBoard, byte currentColor, byte depth) {
 
+        if (checkTerminal(currentBoard))
+            return new Pair(null, Integer.MAX_VALUE);
+
+        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+//        System.out.println(possibleMoves.size());
+
+        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+
         // write your codes here
 
+
+        // write your codes here
+        Move bestMove = null;
+        int valueMin = Integer.MAX_VALUE;
+        for (Move move : possibleMoves) {
+            Tile[][] clone = this.board.cloneBoard(currentBoard);
+            clone = this.board.doMove(move, clone);
+            currentColor = (byte)(3 - currentColor);
+            Pair p = max(clone, currentColor, (byte)(depth + 1));
+            if(p.value < valueMin){
+                valueMin = p.value;
+                bestMove = move;
+            }
+        }
         // return pair(move, value)
-        return new Pair(null, 0);
+//        System.out.println(valueMin);
+        return new Pair(bestMove, valueMin);
+    }
+
+    private Pair max2(Tile[][] currentBoard, byte currentColor, byte depth) {
+
+        if (checkTerminal(currentBoard))
+            return new Pair(null, Integer.MIN_VALUE);
+
+        // check depth here
+        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+//        System.out.println(possibleMoves.size());
+        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+
+
+        // write your codes here
+        Move bestMove = null;
+        int valueMax = Integer.MIN_VALUE;
+        for (Move move : possibleMoves) {
+            Tile[][] clone = this.board.cloneBoard(currentBoard);
+            clone = this.board.doMove(move, clone);
+            currentColor = (byte)(3 - currentColor);
+            Pair p = min(clone, currentColor, (byte)(depth + 1));
+            if(p.value > valueMax){
+                valueMax = p.value;
+                bestMove = move;
+            }
+        }
+        // return pair(move, value)
+//        System.out.println(valueMax);
+        return new Pair(bestMove, valueMax);
+    }
+
+    private Pair min2(Tile[][] currentBoard, byte currentColor, byte depth) {
+
+        if (checkTerminal(currentBoard))
+            return new Pair(null, Integer.MAX_VALUE);
+
+        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+//        System.out.println(possibleMoves.size());
+
+        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+
+        // write your codes here
+
+
+        // write your codes here
+        Move bestMove = null;
+        int valueMin = Integer.MAX_VALUE;
+        for (Move move : possibleMoves) {
+            Tile[][] clone = this.board.cloneBoard(currentBoard);
+            clone = this.board.doMove(move, clone);
+            currentColor = (byte)(3 - currentColor);
+            Pair p = max(clone, currentColor, (byte)(depth + 1));
+            if(p.value < valueMin){
+                valueMin = p.value;
+                bestMove = move;
+            }
+        }
+        // return pair(move, value)
+//        System.out.println(valueMin);
+        return new Pair(bestMove, valueMin);
     }
 
     private int evaluate(Tile[][] currentBoard, byte currentColor) {
@@ -55,7 +152,6 @@ public class Agent {
             }
         }
         return score;
-
     }
 
     public List<Move> createPossibleMoves(Tile[][] newBoard, int currentColor) {
