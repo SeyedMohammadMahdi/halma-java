@@ -9,7 +9,7 @@ public class Halma {
     private Board board;
     private final Tile[][] tiles;
 
-    public final static byte maxDepth = 2;
+    public final static byte maxDepth = 3;
     private byte playerTurn;
     private short totalMoves = 0;
     private Agent agent;
@@ -19,7 +19,7 @@ public class Halma {
 
     public Halma() {
         tiles = new Tile[8][8];
-        playerTurn = 1;
+        playerTurn = 2;
         assignCoordinates();
 
     }
@@ -45,7 +45,7 @@ public class Halma {
         checkWinner();
 
         if (playerTurn == 1) {
-            var move = agent.doMinMax(tiles, playerTurn);
+            var move = agent.doMinMax2(tiles, playerTurn);
             movePiece(move);
         }
         else {

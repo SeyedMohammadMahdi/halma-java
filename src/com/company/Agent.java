@@ -16,6 +16,11 @@ public class Agent {
         return temp.move;
     }
 
+    public Move doMinMax2(Tile[][] tiles, byte playerTurn) {
+        Pair temp = max2(tiles, playerTurn, (byte) (0));
+        this.playerTurn = playerTurn;
+        return temp.move;
+    }
     private Pair max(Tile[][] currentBoard, byte currentColor, byte depth) {
 
         if (checkTerminal(currentBoard))
@@ -84,7 +89,7 @@ public class Agent {
         // check depth here
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
 //        System.out.println(possibleMoves.size());
-        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), -evaluate(currentBoard, currentColor));
 
 
         // write your codes here
@@ -94,7 +99,7 @@ public class Agent {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
-            Pair p = min(clone, currentColor, (byte)(depth + 1));
+            Pair p = min2(clone, currentColor, (byte)(depth + 1));
             if(p.value > valueMax){
                 valueMax = p.value;
                 bestMove = move;
@@ -113,7 +118,7 @@ public class Agent {
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
 //        System.out.println(possibleMoves.size());
 
-        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), -evaluate(currentBoard, currentColor));
 
         // write your codes here
 
@@ -125,7 +130,7 @@ public class Agent {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
-            Pair p = max(clone, currentColor, (byte)(depth + 1));
+            Pair p = max2(clone, currentColor, (byte)(depth + 1));
             if(p.value < valueMin){
                 valueMin = p.value;
                 bestMove = move;
