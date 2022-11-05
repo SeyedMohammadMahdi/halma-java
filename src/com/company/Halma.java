@@ -9,7 +9,9 @@ public class Halma {
     private Board board;
     private final Tile[][] tiles;
 
-    public final static byte maxDepth = 3;
+    public final static byte maxDepth = 2;
+    public final static byte minDepth = 4;
+
     private byte playerTurn;
     private short totalMoves = 0;
     private Agent agent;
