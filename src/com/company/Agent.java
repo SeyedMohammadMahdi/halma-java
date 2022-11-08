@@ -171,7 +171,11 @@ public class Agent {
                 if (move.startPos.x + move.startPos.y > move.finalPos.x + move.finalPos.y) {
                     score += (move.startPos.x + move.startPos.y) - (move.finalPos.x + move.finalPos.y);
                 }
+                else {
+                    score -= -(move.startPos.x + move.startPos.y) + (move.finalPos.x + move.finalPos.y);
+                }
             }
+
         }
         return score;
     }
