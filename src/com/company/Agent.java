@@ -148,13 +148,28 @@ public class Agent {
         for (byte i = 0; i < currentBoard.length; i++) {
             for (byte j = 0; j < currentBoard.length; j++) {
                 if (currentBoard[i][j].color == playerTurn) {
-                    score += (7 - i);
-                    score += (7 - j);
+                    if (playerTurn == 2 && i + j > 3) {
+                        score += (3 - i);
+                        score += (3 - j);
+                    }
+                    else {
+                        score += (7 - i);
+                        score += (7 - j);
+                    }
                 } else if (currentBoard[i][j].color == (3 - playerTurn)) {
 
                     score -= i;
                     score -= j;
 
+                }
+            }
+        }
+
+        if (playerTurn == 2 && playerTurn == currentColor) {
+            List<Move> moves  = createPossibleMoves(currentBoard, currentColor);
+            for (Move move : moves) {
+                if (move.startPos.x + move.startPos.y > move.finalPos.x + move.finalPos.y) {
+                    score += (move.startPos.x + move.startPos.y) - (move.finalPos.x + move.finalPos.y);
                 }
             }
         }
