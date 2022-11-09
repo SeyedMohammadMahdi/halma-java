@@ -3,6 +3,8 @@ package com.company;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 public class Agent {
     private Board board;
     private byte playerTurn;
@@ -91,7 +93,7 @@ public class Agent {
         // check depth here
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
 //        System.out.println(possibleMoves.size());
-        if (depth == Halma.minDepth) return new Pair(possibleMoves.get(0), -evaluate(currentBoard, currentColor));
+        if (depth == Halma.minDepth) return new Pair(possibleMoves.get(0), -evaluate2(currentBoard, currentColor));
 
 
         // write your codes here
@@ -122,7 +124,7 @@ public class Agent {
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
 //        System.out.println(possibleMoves.size());
 
-        if (depth == Halma.minDepth) return new Pair(possibleMoves.get(0), -evaluate(currentBoard, currentColor));
+        if (depth == Halma.minDepth) return new Pair(possibleMoves.get(0), -evaluate2(currentBoard, currentColor));
 
         // write your codes here
 
@@ -180,6 +182,32 @@ public class Agent {
             }
 
         }
+        return score;
+    }
+
+
+
+    private int evaluate2(Tile[][] currentBoard, byte currentColor) {
+        int score = 0;
+        int w1 = 1 ;
+        int w2 = 1;
+        int f1 = 0  ;
+        int f2 =0 ;
+        for (byte i = 0; i < currentBoard.length; i++) {
+            for (byte j = 0; j < currentBoard.length; j++) {
+                if (currentBoard[i][j].color == playerTurn) {
+                    f1 += i;
+                    f1 += j;
+                    if((i+j)>3 && (i+j) < 11)f2 += abs(i-j);
+//                    if
+                } else if (currentBoard[i][j].color == (3 - playerTurn)) {
+                    f1 += (7 - i);
+                    f1 += (7 - j);
+                    if((i+j)>3 && (i+j) < 11)f2 += abs(i-j);
+                }
+            }
+        }
+        score = f1*w1 + f2*w2 ;
         return score;
     }
 
