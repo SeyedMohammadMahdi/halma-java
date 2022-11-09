@@ -11,7 +11,7 @@ public class Agent {
     }
 
     public Move doMinMax(Tile[][] tiles, byte playerTurn) {
-        Pair temp = max(tiles, playerTurn, (byte) (0));
+        Pair temp = max(tiles, playerTurn, (byte) (0), Integer.MAX_VALUE);
         this.playerTurn = playerTurn;
         return temp.move;
     }
@@ -21,7 +21,7 @@ public class Agent {
         this.playerTurn = playerTurn;
         return temp.move;
     }
-    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth) {
+    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth, int loc) {
 
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MIN_VALUE);
@@ -39,7 +39,8 @@ public class Agent {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
-            Pair p = min(clone, currentColor, (byte)(depth + 1));
+            Pair p = min(clone, currentColor, (byte)(depth + 1), valueMax);
+            if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
             if(p.value > valueMax){
                 valueMax = p.value;
                 bestMove = move;
@@ -50,7 +51,7 @@ public class Agent {
         return new Pair(bestMove, valueMax);
     }
 
-    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth) {
+    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth, int loc) {
 
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MAX_VALUE);
@@ -70,7 +71,8 @@ public class Agent {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
-            Pair p = max(clone, currentColor, (byte)(depth + 1));
+            Pair p = max(clone, currentColor, (byte)(depth + 1), valueMin);
+            if(loc>p.value)return new Pair(null,Integer.MIN_VALUE);
             if(p.value < valueMin){
                 valueMin = p.value;
                 bestMove = move;
@@ -100,6 +102,7 @@ public class Agent {
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
             Pair p = min2(clone, currentColor, (byte)(depth + 1),valueMax);
+
             if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
             if(p.value > valueMax){
                 valueMax = p.value;
@@ -164,7 +167,7 @@ public class Agent {
                 }
             }
         }
-
+        score *= 3;
         if (playerTurn == 2 && playerTurn == currentColor) {
             List<Move> moves  = createPossibleMoves(currentBoard, currentColor);
             for (Move move : moves) {
