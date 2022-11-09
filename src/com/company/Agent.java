@@ -189,25 +189,52 @@ public class Agent {
 
     private int evaluate2(Tile[][] currentBoard, byte currentColor) {
         int score = 0;
-        int w1 = 1 ;
-        int w2 = 1;
+        int w1 = 2;
+        int w2 = 16;
+        int w3 = 3;
+        int w4 = 2;
         int f1 = 0  ;
         int f2 =0 ;
+        int f3 =0  ;
+        int f4 = 0 ;
         for (byte i = 0; i < currentBoard.length; i++) {
             for (byte j = 0; j < currentBoard.length; j++) {
                 if (currentBoard[i][j].color == playerTurn) {
                     f1 += i;
                     f1 += j;
-                    if((i+j)>3 && (i+j) < 11)f2 += abs(i-j);
-//                    if
+                    if((i+j) >= 11)f2 ++;
                 } else if (currentBoard[i][j].color == (3 - playerTurn)) {
                     f1 += (7 - i);
                     f1 += (7 - j);
-                    if((i+j)>3 && (i+j) < 11)f2 += abs(i-j);
                 }
             }
         }
-        score = f1*w1 + f2*w2 ;
+        if (playerTurn == 1) {
+            List<Move> moves  = createPossibleMoves(currentBoard, currentColor);
+            for (Move move : moves) {
+                int sf = move.finalPos.x + move.finalPos.y ;
+                int ss =move.startPos.x + move.startPos.y;
+                if ( ss<sf ) {
+                    f3+=(sf-ss);
+                }
+                if(sf>=11) {
+                    f4++;
+                }
+            }
+            List<Move> moves2  = createPossibleMoves(currentBoard, 3-currentColor);
+            for (Move move : moves2) {
+                int sf = move.finalPos.x + move.finalPos.y ;
+                int ss =move.startPos.x + move.startPos.y;
+                if ( ss<sf ) {
+                    f3-=(sf-ss);
+                }
+                if(sf<=3) {
+                    f4--;
+                }
+            }
+        }
+
+        score = f1*w1 + f2*w2 + f3*w3 + w4*f4 ;
         return score;
     }
 

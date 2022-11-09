@@ -21,7 +21,7 @@ public class Halma {
 
     public Halma() {
         tiles = new Tile[8][8];
-        playerTurn = 2;
+        playerTurn = 1;
         assignCoordinates();
 
     }
