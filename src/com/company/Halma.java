@@ -3,10 +3,13 @@ package com.company;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
+import java.util.Hashtable;
 
 public class Halma {
 
     private Board board;
+
+    public static Hashtable<String, Boolean> states;
     private final Tile[][] tiles;
 
     public final static byte maxDepth = 3;
@@ -20,9 +23,9 @@ public class Halma {
 
     public Halma() {
         tiles = new Tile[8][8];
-        playerTurn = 2;
+        playerTurn = 1;
+        states = new Hashtable<>();
         assignCoordinates();
-
     }
 
     private void assignCoordinates() {
@@ -52,8 +55,10 @@ public class Halma {
         }
         else {
             var move = agentRed.doMinMax(tiles,playerTurn);
-            if(move != null)
+            if(move != null) {
                 movePiece(move);
+                states.put(hash(tiles), true);
+            }
             else
                 doRandomAction(playerTurn);
         }
@@ -130,4 +135,16 @@ public class Halma {
         gameUI.addMarbles();
         gameUI.addFrame();
     }
+
+    public static String hash(Tile[][] tile) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                result.append(tile[i][j].color).append(".");
+            }
+        }
+        return result.toString();
+    }
+
+
 }

@@ -23,18 +23,20 @@ public class AgentRed {
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MIN_VALUE);
 
-        // check depth here
+
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
-//        System.out.println(possibleMoves.size());
+
         if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
 
 
-        // write your codes here
+
         Move bestMove = null;
         int valueMax = Integer.MIN_VALUE;
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
+            if(Halma.states.containsKey(Halma.hash(clone)))
+                continue;
             currentColor = (byte)(3 - currentColor);
             Pair p = min(clone, currentColor, (byte)(depth + 1));
             if(p.value > valueMax){
@@ -42,8 +44,6 @@ public class AgentRed {
                 bestMove = move;
             }
         }
-        // return pair(move, value)
-//        System.out.println(valueMax);
         return new Pair(bestMove, valueMax);
     }
 
@@ -53,19 +53,21 @@ public class AgentRed {
             return new Pair(null, Integer.MAX_VALUE);
 
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
-//        System.out.println(possibleMoves.size());
+
 
         if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
 
-        // write your codes here
 
 
-        // write your codes here
+
+
         Move bestMove = null;
         int valueMin = Integer.MAX_VALUE;
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
+            if(Halma.states.containsKey(Halma.hash(clone)))
+                continue;
             currentColor = (byte)(3 - currentColor);
             Pair p = max(clone, currentColor, (byte)(depth + 1));
             if(p.value < valueMin){
@@ -73,20 +75,18 @@ public class AgentRed {
                 bestMove = move;
             }
         }
-        // return pair(move, value)
-//        System.out.println(valueMin);
         return new Pair(bestMove, valueMin);
     }
 
     private int evaluate(Tile[][] currentBoard, byte currentColor) {
-//        System.out.println(playerTurn);
+
         short score = 0;
         for (byte i = 0; i < currentBoard.length; i++) {
             for (byte j = 0; j < currentBoard.length; j++) {
                 if (currentBoard[i][j].color == playerTurn && abs(i-j) < 4) {
                     score += (7 - i);
                     score += (7 - j);
-                } else if (currentBoard[i][j].color == (3 - playerTurn)) {
+                } else if (currentBoard[i][j].color == (3 - playerTurn) || abs(i-j) > 4) {
 
                     score -= i;
                     score -= j;
