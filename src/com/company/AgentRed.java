@@ -3,10 +3,12 @@ package com.company;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Agent {
+import static java.lang.Math.abs;
+
+public class AgentRed {
     private Board board;
     private byte playerTurn;
-    public Agent(Board board){
+    public AgentRed(Board board){
         this.board = board;
     }
 
@@ -21,13 +23,13 @@ public class Agent {
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MIN_VALUE);
 
-
+        // check depth here
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
-
+//        System.out.println(possibleMoves.size());
         if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
 
 
-
+        // write your codes here
         Move bestMove = null;
         int valueMax = Integer.MIN_VALUE;
         for (Move move : possibleMoves) {
@@ -35,13 +37,13 @@ public class Agent {
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
             Pair p = min(clone, currentColor, (byte)(depth + 1));
-//            if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
             if(p.value > valueMax){
                 valueMax = p.value;
                 bestMove = move;
             }
         }
-
+        // return pair(move, value)
+//        System.out.println(valueMax);
         return new Pair(bestMove, valueMax);
     }
 
@@ -51,11 +53,14 @@ public class Agent {
             return new Pair(null, Integer.MAX_VALUE);
 
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
-
+//        System.out.println(possibleMoves.size());
 
         if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
 
+        // write your codes here
 
+
+        // write your codes here
         Move bestMove = null;
         int valueMin = Integer.MAX_VALUE;
         for (Move move : possibleMoves) {
@@ -63,29 +68,43 @@ public class Agent {
             clone = this.board.doMove(move, clone);
             currentColor = (byte)(3 - currentColor);
             Pair p = max(clone, currentColor, (byte)(depth + 1));
-//            if(loc>p.value)return new Pair(null,Integer.MIN_VALUE);
             if(p.value < valueMin){
                 valueMin = p.value;
                 bestMove = move;
             }
         }
-
+        // return pair(move, value)
+//        System.out.println(valueMin);
         return new Pair(bestMove, valueMin);
     }
 
     private int evaluate(Tile[][] currentBoard, byte currentColor) {
+//        System.out.println(playerTurn);
         short score = 0;
         for (byte i = 0; i < currentBoard.length; i++) {
             for (byte j = 0; j < currentBoard.length; j++) {
-                if (currentBoard[i][j].color == playerTurn) {
-                    score += 2 * (7 - i);
-                    score += 2 * (7 - j);
+                if (currentBoard[i][j].color == playerTurn && abs(i-j) < 4) {
+                    score += (7 - i);
+                    score += (7 - j);
                 } else if (currentBoard[i][j].color == (3 - playerTurn)) {
 
                     score -= i;
                     score -= j;
 
                 }
+            }
+        }
+
+        score *= 10;
+        List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
+        for(Move move : moves) {
+            if(move.startPos.x + move.startPos.y > 3 && move.finalPos.x + move.finalPos.y <= 3){
+                score += 5;
+            }
+            else if(move.startPos.x + move.startPos.y >  move.finalPos.x + move.finalPos.y) {
+                score += 4;
+            } else if (move.startPos.x + move.startPos.y <  move.finalPos.x + move.finalPos.y) {
+                score -= 3;
             }
         }
         return score;
@@ -131,87 +150,5 @@ public class Agent {
             }
         }
         return false;
-    }
-
-    public Move doMinMax2(Tile[][] tiles, byte playerTurn) {
-        Pair temp = max2(tiles, playerTurn, (byte) (0));
-        this.playerTurn = playerTurn;
-        return temp.move;
-    }
-
-    private Pair max2(Tile[][] currentBoard, byte currentColor, byte depth) {
-
-        if (checkTerminal(currentBoard))
-            return new Pair(null, Integer.MIN_VALUE);
-
-
-        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
-
-        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate2(currentBoard, currentColor));
-
-
-
-        Move bestMove = null;
-        int valueMax = Integer.MIN_VALUE;
-        for (Move move : possibleMoves) {
-            Tile[][] clone = this.board.cloneBoard(currentBoard);
-            clone = this.board.doMove(move, clone);
-            currentColor = (byte)(3 - currentColor);
-            Pair p = min2(clone, currentColor, (byte)(depth + 1));
-//            if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
-            if(p.value > valueMax){
-                valueMax = p.value;
-                bestMove = move;
-            }
-        }
-
-        return new Pair(bestMove, valueMax);
-    }
-
-    private Pair min2(Tile[][] currentBoard, byte currentColor, byte depth) {
-
-        if (checkTerminal(currentBoard))
-            return new Pair(null, Integer.MAX_VALUE);
-
-        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
-
-
-        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate2(currentBoard, currentColor));
-
-
-        Move bestMove = null;
-        int valueMin = Integer.MAX_VALUE;
-        for (Move move : possibleMoves) {
-            Tile[][] clone = this.board.cloneBoard(currentBoard);
-            clone = this.board.doMove(move, clone);
-            currentColor = (byte)(3 - currentColor);
-            Pair p = max2(clone, currentColor, (byte)(depth + 1));
-//            if(loc>p.value)return new Pair(null,Integer.MIN_VALUE);
-            if(p.value < valueMin){
-                valueMin = p.value;
-                bestMove = move;
-            }
-        }
-
-        return new Pair(bestMove, valueMin);
-    }
-
-    private int evaluate2(Tile[][] currentBoard, byte currentColor) {
-        short score = 0;
-        for (byte i = 0; i < currentBoard.length; i++) {
-            for (byte j = 0; j < currentBoard.length; j++) {
-                if (currentBoard[i][j].color == playerTurn) {
-                    score += (7 - i);
-                    score += (7 - j);
-                } else if (currentBoard[i][j].color == (3 - playerTurn)) {
-
-                    score -= i;
-                    score -= j;
-
-                }
-            }
-        }
-        return -score;
-
     }
 }

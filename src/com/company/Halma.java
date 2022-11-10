@@ -12,14 +12,15 @@ public class Halma {
     public final static byte maxDepth = 3;
     private byte playerTurn;
     private short totalMoves = 0;
-    private Agent agent;
+    private AgentRed agentRed;
+    private AgentBlue agentBlue;
     private byte firstX, firstY, secondX, secondY;
 
     GUI gameUI = new GUI();
 
     public Halma() {
         tiles = new Tile[8][8];
-        playerTurn = 1;
+        playerTurn = 2;
         assignCoordinates();
 
     }
@@ -44,13 +45,13 @@ public class Halma {
 
         checkWinner();
 
-        if (playerTurn == 1){
+        if (playerTurn == 1) {
 //            doRandomAction(playerTurn);
-            var move = agent.doMinMax2(tiles, playerTurn);
+            var move = agentBlue.doMinMax(tiles, playerTurn);
             movePiece(move);
         }
         else {
-            var move = agent.doMinMax(tiles,playerTurn);
+            var move = agentRed.doMinMax(tiles,playerTurn);
             if(move != null)
                 movePiece(move);
             else
@@ -61,7 +62,7 @@ public class Halma {
     }
 
     private void checkWinner() {
-        if (agent.checkTerminal(tiles)) {
+        if (agentRed.checkTerminal(tiles)) {
             gameUI.printText("\n Game has ended! \n");
             try {
                 TimeUnit.SECONDS.sleep(Integer.MAX_VALUE);
@@ -71,7 +72,7 @@ public class Halma {
 
     private void doRandomAction(int playerTurn) {
 
-        var possibleMoves = agent.createPossibleMoves(tiles, playerTurn);
+        var possibleMoves = agentRed.createPossibleMoves(tiles, playerTurn);
         var random = new Random().nextInt(possibleMoves.size() - 1);
         firstX = possibleMoves.get(random).startPos.x;
         firstY = possibleMoves.get(random).startPos.y;
@@ -102,7 +103,8 @@ public class Halma {
 
     public void runGame() {
         board = new Board();
-        agent = new Agent(board);
+        agentRed = new AgentRed(board);
+        agentBlue = new AgentBlue(board);
         GUI jk = new GUI();
         jk.createBoard();
         jk.createTextBoxArea();

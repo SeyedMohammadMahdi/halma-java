@@ -8,4 +8,8 @@ public class Move {
     }
     public Tile startPos;
     public Tile finalPos;
+
+    public int distance() {
+        return (this.finalPos.x + this.finalPos.y) - (this.startPos.x + this.startPos.y);
+    }
 }
