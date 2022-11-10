@@ -95,18 +95,19 @@ public class AgentBlue {
             }
         }
 
-//        score *= 10;
-//        List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
-//        for(Move move : moves) {
-//            if(move.startPos.x + move.startPos.y > 3 && move.finalPos.x + move.finalPos.y <= 3){
-//                score += 5;
-//            }
-//            else if(move.startPos.x + move.startPos.y >  move.finalPos.x + move.finalPos.y) {
-//                score += 4;
-//            } else if (move.startPos.x + move.startPos.y <  move.finalPos.x + move.finalPos.y) {
-//                score -= 3;
-//            }
-//        }
+        score *= 10;
+        List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
+        for(Move move : moves) {
+            if(move.startPos.x + move.startPos.y < 11 && move.finalPos.x + move.finalPos.y >= 11){
+                score += 5;
+            }
+            else if(move.startPos.x + move.startPos.y <  move.finalPos.x + move.finalPos.y) {
+                score += 4;
+            } else if (move.startPos.x + move.startPos.y >  move.finalPos.x + move.finalPos.y) {
+                score -= 3;
+            }
+        }
+
         return score;
 
     }
