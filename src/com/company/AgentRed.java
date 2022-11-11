@@ -83,19 +83,26 @@ public class AgentRed {
         short score = 0;
         for (byte i = 0; i < currentBoard.length; i++) {
             for (byte j = 0; j < currentBoard.length; j++) {
-                if (currentBoard[i][j].color == playerTurn && abs(i-j) < 4) {
+                if (currentBoard[i][j].color == playerTurn) {
                     score += (7 - i);
                     score += (7 - j);
-                } else if (currentBoard[i][j].color == (3 - playerTurn) || abs(i-j) > 4) {
+                } else if (currentBoard[i][j].color == (3 - playerTurn)) {
 
                     score -= i;
                     score -= j;
 
                 }
+
+                if(currentBoard[i][j].zone == (3 - playerTurn) && currentBoard[i][j].color == playerTurn) {
+                    score++;
+                }
+                else if (currentBoard[i][j].zone == playerTurn && currentBoard[i][j].color == playerTurn){
+                    score--;
+                }
             }
         }
 
-        score *= 10;
+        score *= 6;
         List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
         for(Move move : moves) {
             if(move.startPos.x + move.startPos.y > 3 && move.finalPos.x + move.finalPos.y <= 3){
