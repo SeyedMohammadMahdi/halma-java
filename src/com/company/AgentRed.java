@@ -168,7 +168,7 @@ public class AgentRed {
             }
         }
 
-        score *= 6;
+        score *= 10;
         List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
         for(Move move : moves) {
             if(move.startPos.x + move.startPos.y > 3 && move.finalPos.x + move.finalPos.y <= 3){

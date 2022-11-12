@@ -12,13 +12,108 @@ public class AgentBlue {
         this.board = board;
     }
 
+//    public Move doMinMax(Tile[][] tiles, byte playerTurn) {
+//        Pair temp = max(tiles, playerTurn, (byte) (0));
+//        this.playerTurn = playerTurn;
+//        return temp.move;
+//    }
+//
+//    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth) {
+//
+//        if (checkTerminal(currentBoard))
+//            return new Pair(null, Integer.MIN_VALUE);
+//
+//        // check depth here
+//        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+////        System.out.println(possibleMoves.size());
+//        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+//
+//
+//        // write your codes here
+//        Move bestMove = null;
+//        int valueMax = Integer.MIN_VALUE;
+//        for (Move move : possibleMoves) {
+//            Tile[][] clone = this.board.cloneBoard(currentBoard);
+//            clone = this.board.doMove(move, clone);
+//            currentColor = (byte)(3 - currentColor);
+//            Pair p = min(clone, currentColor, (byte)(depth + 1));
+//            if(p.value > valueMax){
+//                valueMax = p.value;
+//                bestMove = move;
+//            }
+//        }
+//        // return pair(move, value)
+////        System.out.println(valueMax);
+//        return new Pair(bestMove, valueMax);
+//    }
+//
+//    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth) {
+//
+//        if (checkTerminal(currentBoard))
+//            return new Pair(null, Integer.MAX_VALUE);
+//
+//        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+////        System.out.println(possibleMoves.size());
+//
+//        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+//
+//        // write your codes here
+//
+//
+//        // write your codes here
+//        Move bestMove = null;
+//        int valueMin = Integer.MAX_VALUE;
+//        for (Move move : possibleMoves) {
+//            Tile[][] clone = this.board.cloneBoard(currentBoard);
+//            clone = this.board.doMove(move, clone);
+//            currentColor = (byte)(3 - currentColor);
+//            Pair p = max(clone, currentColor, (byte)(depth + 1));
+//            if(p.value < valueMin){
+//                valueMin = p.value;
+//                bestMove = move;
+//            }
+//        }
+//        // return pair(move, value)
+////        System.out.println(valueMin);
+//        return new Pair(bestMove, valueMin);
+//    }
+
     public Move doMinMax(Tile[][] tiles, byte playerTurn) {
-        Pair temp = max(tiles, playerTurn, (byte) (0));
+        Pair temp = max(tiles, playerTurn, (byte) (0), Integer.MAX_VALUE);
         this.playerTurn = playerTurn;
         return temp.move;
     }
 
-    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth) {
+//    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth) {
+//
+//        if (checkTerminal(currentBoard))
+//            return new Pair(null, Integer.MIN_VALUE);
+//
+//
+//        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+//
+//        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+//
+//
+//
+//        Move bestMove = null;
+//        int valueMax = Integer.MIN_VALUE;
+//        for (Move move : possibleMoves) {
+//            Tile[][] clone = this.board.cloneBoard(currentBoard);
+//            clone = this.board.doMove(move, clone);
+//            if(Halma.states.containsKey(Halma.hash(clone)))
+//                continue;
+//            currentColor = (byte)(3 - currentColor);
+//            Pair p = min(clone, currentColor, (byte)(depth + 1));
+//            if(p.value > valueMax){
+//                valueMax = p.value;
+//                bestMove = move;
+//            }
+//        }
+//        return new Pair(bestMove, valueMax);
+//    }
+
+    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth, int loc) {
 
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MIN_VALUE);
@@ -35,8 +130,11 @@ public class AgentBlue {
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
+            if(Halma.states.containsKey(Halma.hash(clone)))
+                continue;
             currentColor = (byte)(3 - currentColor);
-            Pair p = min(clone, currentColor, (byte)(depth + 1));
+            Pair p = min(clone, currentColor, (byte)(depth + 1), valueMax);
+            if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
             if(p.value > valueMax){
                 valueMax = p.value;
                 bestMove = move;
@@ -47,7 +145,38 @@ public class AgentBlue {
         return new Pair(bestMove, valueMax);
     }
 
-    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth) {
+//    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth) {
+//
+//        if (checkTerminal(currentBoard))
+//            return new Pair(null, Integer.MAX_VALUE);
+//
+//        List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
+//
+//
+//        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+//
+//
+//
+//
+//
+//        Move bestMove = null;
+//        int valueMin = Integer.MAX_VALUE;
+//        for (Move move : possibleMoves) {
+//            Tile[][] clone = this.board.cloneBoard(currentBoard);
+//            clone = this.board.doMove(move, clone);
+//            if(Halma.states.containsKey(Halma.hash(clone)))
+//                continue;
+//            currentColor = (byte)(3 - currentColor);
+//            Pair p = max(clone, currentColor, (byte)(depth + 1));
+//            if(p.value < valueMin){
+//                valueMin = p.value;
+//                bestMove = move;
+//            }
+//        }
+//        return new Pair(bestMove, valueMin);
+//    }
+
+    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth, int loc) {
 
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MAX_VALUE);
@@ -66,8 +195,11 @@ public class AgentBlue {
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
+            if(Halma.states.containsKey(Halma.hash(clone)))
+                continue;
             currentColor = (byte)(3 - currentColor);
-            Pair p = max(clone, currentColor, (byte)(depth + 1));
+            Pair p = max(clone, currentColor, (byte)(depth + 1), valueMin);
+            if(loc>p.value)return new Pair(null,Integer.MIN_VALUE);
             if(p.value < valueMin){
                 valueMin = p.value;
                 bestMove = move;
@@ -83,6 +215,9 @@ public class AgentBlue {
         short score = 0;
         for (byte i = 0; i < currentBoard.length; i++) {
             for (byte j = 0; j < currentBoard.length; j++) {
+                if (abs(i - j) > 4) {
+                    score-= abs(i - j);
+                }
                 if (currentBoard[i][j].color == playerTurn) {
                     score += i;
                     score += j;
@@ -91,6 +226,13 @@ public class AgentBlue {
                     score -= (7 - i);
                     score -= (7 - j);
 
+                }
+
+                if(currentBoard[i][j].zone == (3 - playerTurn) && currentBoard[i][j].color == playerTurn) {
+                    score++;
+                }
+                else if (currentBoard[i][j].zone == playerTurn && currentBoard[i][j].color == playerTurn){
+                    score--;
                 }
             }
         }
