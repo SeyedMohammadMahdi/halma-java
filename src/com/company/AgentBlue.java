@@ -237,7 +237,12 @@ public class AgentBlue {
             }
         }
 
-        score *= 16;
+        if(Halma.blueDepth == 3) {
+            score*=10;
+        }else {
+            score *= 16;
+        }
+
         List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
         for(Move move : moves) {
             if(move.startPos.x + move.startPos.y < 11 && move.finalPos.x + move.finalPos.y >= 11){
