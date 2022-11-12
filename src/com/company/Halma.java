@@ -12,7 +12,9 @@ public class Halma {
     public static Hashtable<String, Boolean> states;
     private final Tile[][] tiles;
 
-    public final static byte maxDepth = 3;
+    public final static byte redDepth = 3;
+    public final static byte blueDepth = 3;
+
     private byte playerTurn;
     private short totalMoves = 0;
     private AgentRed agentRed;

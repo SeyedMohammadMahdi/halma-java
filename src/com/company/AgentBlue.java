@@ -121,7 +121,7 @@ public class AgentBlue {
         // check depth here
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
 //        System.out.println(possibleMoves.size());
-        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+        if (depth == Halma.blueDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
 
 
         // write your codes here
@@ -184,7 +184,7 @@ public class AgentBlue {
         List<Move> possibleMoves = createPossibleMoves(currentBoard, currentColor);
 //        System.out.println(possibleMoves.size());
 
-        if (depth == Halma.maxDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
+        if (depth == Halma.blueDepth) return new Pair(possibleMoves.get(0), evaluate(currentBoard, currentColor));
 
         // write your codes here
 
@@ -237,7 +237,7 @@ public class AgentBlue {
             }
         }
 
-        score *= 10;
+        score *= 16;
         List<Move> moves = createPossibleMoves(currentBoard, playerTurn);
         for(Move move : moves) {
             if(move.startPos.x + move.startPos.y < 11 && move.finalPos.x + move.finalPos.y >= 11){
