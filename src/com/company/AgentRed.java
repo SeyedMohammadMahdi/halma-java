@@ -13,7 +13,7 @@ public class AgentRed {
     }
 
     public Move doMinMax(Tile[][] tiles, byte playerTurn) {
-        Pair temp = max(tiles, playerTurn, (byte) (0), Integer.MAX_VALUE);
+        Pair temp = max(tiles, playerTurn, (byte) (0), Integer.MIN_VALUE, Integer.MAX_VALUE);
         this.playerTurn = playerTurn;
         return temp.move;
     }
@@ -47,7 +47,7 @@ public class AgentRed {
 //        return new Pair(bestMove, valueMax);
 //    }
 
-    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth, int loc) {
+    private Pair max(Tile[][] currentBoard, byte currentColor, byte depth, int alpha, int beta) {
 
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MIN_VALUE);
@@ -67,8 +67,8 @@ public class AgentRed {
 //            if(Halma.states.containsKey(Halma.hash(clone)))
 //                continue;
             currentColor = (byte)(3 - currentColor);
-            Pair p = min(clone, currentColor, (byte)(depth + 1), valueMax);
-            if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
+            Pair p = min(clone, currentColor, (byte)(depth + 1), Math.max(valueMax, alpha), beta);
+            if(beta<p.value)return new Pair(null,Integer.MAX_VALUE);
             if(p.value > valueMax){
                 valueMax = p.value;
                 bestMove = move;
@@ -110,7 +110,7 @@ public class AgentRed {
 //        return new Pair(bestMove, valueMin);
 //    }
 
-    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth, int loc) {
+    private Pair min(Tile[][] currentBoard, byte currentColor, byte depth, int alpha, int beta) {
 
         if (checkTerminal(currentBoard))
             return new Pair(null, Integer.MAX_VALUE);
@@ -132,8 +132,8 @@ public class AgentRed {
 //            if(Halma.states.containsKey(Halma.hash(clone)))
 //                continue;
             currentColor = (byte)(3 - currentColor);
-            Pair p = max(clone, currentColor, (byte)(depth + 1), valueMin);
-            if(loc>p.value)return new Pair(null,Integer.MIN_VALUE);
+            Pair p = max(clone, currentColor, (byte)(depth + 1), alpha, Math.min(valueMin, beta));
+            if(alpha>p.value)return new Pair(null,Integer.MIN_VALUE);
             if(p.value < valueMin){
                 valueMin = p.value;
                 bestMove = move;
