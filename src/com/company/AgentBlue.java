@@ -130,8 +130,8 @@ public class AgentBlue {
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
-            if(Halma.states.containsKey(Halma.hash(clone)))
-                continue;
+//            if(Halma.states.containsKey(Halma.hash(clone)))
+//                continue;
             currentColor = (byte)(3 - currentColor);
             Pair p = min(clone, currentColor, (byte)(depth + 1), valueMax);
             if(loc<p.value)return new Pair(null,Integer.MAX_VALUE);
@@ -195,8 +195,8 @@ public class AgentBlue {
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
-            if(Halma.states.containsKey(Halma.hash(clone)))
-                continue;
+//            if(Halma.states.containsKey(Halma.hash(clone)))
+//                continue;
             currentColor = (byte)(3 - currentColor);
             Pair p = max(clone, currentColor, (byte)(depth + 1), valueMin);
             if(loc>p.value)return new Pair(null,Integer.MIN_VALUE);

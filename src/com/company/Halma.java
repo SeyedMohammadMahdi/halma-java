@@ -23,7 +23,7 @@ public class Halma {
 
     public Halma() {
         tiles = new Tile[8][8];
-        playerTurn = 2;
+        playerTurn = 1;
         states = new Hashtable<>();
         assignCoordinates();
     }
@@ -57,7 +57,7 @@ public class Halma {
             var move = agentRed.doMinMax(tiles,playerTurn);
             if(move != null) {
                 movePiece(move);
-                states.put(hash(tiles), true);
+//                states.put(hash(tiles), true);
             }
             else
                 doRandomAction(playerTurn);
