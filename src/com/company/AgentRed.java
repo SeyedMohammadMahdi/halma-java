@@ -64,8 +64,17 @@ public class AgentRed {
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
-//            if(Halma.states.containsKey(Halma.hash(clone)))
-//                continue;
+            int key = Halma.zobrisHash(clone, depth);
+            if(Halma.states.containsKey(key)) {
+                Tranposition now = Halma.states.get(key);
+                if(beta<now.value)return new Pair(null,Integer.MAX_VALUE);
+                if(now.value > valueMax){
+                    valueMax = now.value;
+                    bestMove = move;
+                }
+                continue;
+            }
+//          update best value by checking hashmap
             currentColor = (byte)(3 - currentColor);
             Pair p = min(clone, currentColor, (byte)(depth + 1), Math.max(valueMax, alpha), beta);
             if(beta<p.value)return new Pair(null,Integer.MAX_VALUE);
@@ -73,6 +82,9 @@ public class AgentRed {
                 valueMax = p.value;
                 bestMove = move;
             }
+//            key = Halma.zobrisHash(clone, depth);
+            Tranposition tey = new Tranposition(p.value, depth);
+            Halma.states.put(key, tey);
         }
         // return pair(move, value)
 //        System.out.println(valueMax);
@@ -129,8 +141,16 @@ public class AgentRed {
         for (Move move : possibleMoves) {
             Tile[][] clone = this.board.cloneBoard(currentBoard);
             clone = this.board.doMove(move, clone);
-//            if(Halma.states.containsKey(Halma.hash(clone)))
-//                continue;
+            int key = Halma.zobrisHash(clone, depth);
+            if(Halma.states.containsKey(key)) {
+                Tranposition now = Halma.states.get(key);
+                if(alpha>now.value)return new Pair(null,Integer.MIN_VALUE);
+                if(now.value > valueMin){
+                    valueMin = now.value;
+                    bestMove = move;
+                }
+                continue;
+            }
             currentColor = (byte)(3 - currentColor);
             Pair p = max(clone, currentColor, (byte)(depth + 1), alpha, Math.min(valueMin, beta));
             if(alpha>p.value)return new Pair(null,Integer.MIN_VALUE);
@@ -138,6 +158,8 @@ public class AgentRed {
                 valueMin = p.value;
                 bestMove = move;
             }
+            Tranposition tey = new Tranposition(p.value, depth);
+            Halma.states.put(key, tey);
         }
         // return pair(move, value)
 //        System.out.println(valueMin);

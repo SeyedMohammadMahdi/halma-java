@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
@@ -12,11 +13,11 @@ public class Halma {
 
     private Board board;
 
-    public static Hashtable<String, Integer> states;
+    public static HashMap<Integer, Tranposition> states;
     private final Tile[][] tiles;
 
     public final static byte redDepth = 4;
-    public final static byte blueDepth = 3;
+    public final static byte blueDepth = 4;
 
     private byte playerTurn;
     private short totalMoves = 0;
@@ -24,7 +25,7 @@ public class Halma {
     private AgentBlue agentBlue;
     private byte firstX, firstY, secondX, secondY;
 
-    public int[][][] table;Boolean
+    public static int[][][] table;
 
 
     GUI gameUI = new GUI();
@@ -32,7 +33,7 @@ public class Halma {
     public Halma() {
         tiles = new Tile[8][8];
         playerTurn = 1;
-        states = new Hashtable<>();
+        states = new HashMap<>();
         assignCoordinates();
         table = new int[8][8][2];
 
@@ -68,7 +69,7 @@ public class Halma {
             var move = agentRed.doMinMax(tiles,playerTurn);
             if(move != null) {
                 movePiece(move);
-                states.put(hash(tiles), true);
+//                states.put(hash(tiles), true);
             }
             else
                 doRandomAction(playerTurn);
@@ -147,14 +148,20 @@ public class Halma {
         gameUI.addFrame();
     }
 
-    public static String hash(Tile[][] tile) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                result.append(tile[i][j].color).append(".");
+    public static int zobrisHash(Tile[][] tile, int depth) {
+        int xorResult = 0;
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                int c = tile[i][j].color;
+                if(c == 0)
+                    continue;
+                xorResult ^= table[i][j][c-1];
             }
         }
-        return result.toString();
+        xorResult ^= depth;
+//        System.out.println(xorResult);
+//        android.util.Log.d(TAG, "zobrisHash: ");
+        return xorResult;
     }
 
 
@@ -164,10 +171,11 @@ public class Halma {
             for(int j=0;j<8;j++){
                 int maxx = 100000000;
                 int minx = 0 ;
-                int x = (int)Math.random()*(maxx-minx+1)+minx;
-                int y = (int)Math.random()*(maxx-minx+1)+minx;
+                int x = (int)(Math.random()*(maxx-minx+1)+minx);
+                int y = (int)(Math.random()*(maxx-minx+1)+minx);
                 table[i][j][0] = x;
                 table[i][j][1] = y;
+//                System.out.println(table[i][j][1]);
             }
         }
     }
