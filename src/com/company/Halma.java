@@ -1,15 +1,18 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import java.util.Hashtable;
+import java.lang.Math;
+
 
 public class Halma {
 
     private Board board;
 
-    public static Hashtable<String, Boolean> states;
+    public static Hashtable<String, Integer> states;
     private final Tile[][] tiles;
 
     public final static byte redDepth = 4;
@@ -21,6 +24,9 @@ public class Halma {
     private AgentBlue agentBlue;
     private byte firstX, firstY, secondX, secondY;
 
+    public int[][][] table;Boolean
+
+
     GUI gameUI = new GUI();
 
     public Halma() {
@@ -28,6 +34,9 @@ public class Halma {
         playerTurn = 1;
         states = new Hashtable<>();
         assignCoordinates();
+        table = new int[8][8][2];
+
+        zobrist(table);
     }
 
     private void assignCoordinates() {
@@ -59,7 +68,7 @@ public class Halma {
             var move = agentRed.doMinMax(tiles,playerTurn);
             if(move != null) {
                 movePiece(move);
-//                states.put(hash(tiles), true);
+                states.put(hash(tiles), true);
             }
             else
                 doRandomAction(playerTurn);
@@ -148,5 +157,19 @@ public class Halma {
         return result.toString();
     }
 
+
+
+    public static void zobrist(int [][][] table){
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                int maxx = 100000000;
+                int minx = 0 ;
+                int x = (int)Math.random()*(maxx-minx+1)+minx;
+                int y = (int)Math.random()*(maxx-minx+1)+minx;
+                table[i][j][0] = x;
+                table[i][j][1] = y;
+            }
+        }
+    }
 
 }
